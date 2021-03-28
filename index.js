@@ -12,14 +12,14 @@ app.get('/', (req, res) => {
     res.send('working on my first node js server')
 })
 client.connect(err => {
-  const productCollection = client.db(`${process.env.DB_NAME}`).collection(`${process.env.DB_COLLECTION}`);
-  
+    const productCollection = client.db(`${process.env.DB_NAME}`).collection(`${process.env.DB_COLLECTION}`);
+
     app.post('/addProducts', (req, res) => {
         const products = req.body;
         productCollection.insertMany(products)
-        .then(result => {
-            console.log(result)
-        })
+            .then(result => {
+                console.log(result)
+            })
     })
 
     //load all data from database
@@ -31,21 +31,21 @@ client.connect(err => {
 
     //load single data from database
     app.get(`/product/:key`, (req, res) => {
-        productCollection.find({key: req.params.key})
-        .toArray((err, documents) => {
-            res.send(documents[0])
-        })
+        productCollection.find({ key: req.params.key })
+            .toArray((err, documents) => {
+                res.send(documents[0])
+            })
     })
 
     app.post('/savedProducts', (req, res) => {
         const savedProducts = req.body;
-        productCollection.find({key: {$in: savedProducts}})
-        .toArray((err, documents) => {
-            res.send(documents)
-        })
+        productCollection.find({ key: { $in: savedProducts } })
+            .toArray((err, documents) => {
+                res.send(documents)
+            })
     })
 
 });
 
 
-app.listen(8080)
+app.listen(process.env.PORT || 8080)
